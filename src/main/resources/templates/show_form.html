@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zinsrechner</title>
+    <link rel="stylesheet" href="../static/node_modules/bootstrap/dist/css/bootstrap.min.css"
+          th:href="@{/node_modules/bootstrap/dist/css/bootstrap.min.css}">
+</head>
+<body class="m-3">
+    <div class="container">
+        <h1>Zinsrechner</h1>
+        <div class="row p-2">
+            <div class="col-12 col-lg-6">
+                <div class="card p-3 mb-2">
+                    <form method="post" th:action="@{/}" th:object="${zinsForm}">
+                        <div class="mb-3">
+                            <label for="startCapital" class="form-label">Anfangskapital</label>
+                            <input type="text" class="form-control" id="startCapital" name="startCapital" th:value="*{startCapital}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Laufzeit</label>
+                            <input type="text" class="form-control" id="duration" name="duration" th:value="*{duration}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="interest" class="form-label">Zinssatz (% p.a.)</label>
+                            <input type="text" class="form-control" id="interest" name="interest" th:value="*{interest}">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="showTable" name="showTable" th:field="${zinsForm.showTable}">
+                            <label class="form-check-label" for="showTable">Tabelle anzeigen</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Berechnen</button>
+                    </form>
+                </div>
+            </div>
+            <div th:if="${endCapital}" class="col-12 col-lg-6">
+                <div class="card p-3">
+                    <h4 class="pb-2">Ergebnis</h4>
+                    <p>
+                        Bei einer Laufzeit von <span th:text="${zinsForm.duration}">3</span> Jahren
+                        bei einem konstanten Zinssatz von <span th:text="${zinsForm.interest()}">0.5</span> % p.a.
+                        und einem Anfangskapital von <span th:text="${zinsForm.startCapital()}">5000</span> Euro,
+                        beträgt das Endkapital <span th:text="${endCapital}">1337</span>
+                    </p>
+                    <table class="table" th:if="${zinsForm.showTable() == true}">
+                        <thead>
+                            <tr>
+                                <th>Jahr</th>
+                                <th>Anfangskapital</th>
+                                <th>Zinsen</th>
+                                <th>Endkapital</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="zinsZeile : ${zinsZeilen}">
+                                <td th:text="${zinsZeile.year}"></td>
+                                <td th:text="${zinsZeile.startCapital}"></td>
+                                <td th:text="${zinsZeile.totalInterest}"></td>
+                                <td th:text="${zinsZeile.endCapital}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
